@@ -12,10 +12,11 @@
 }
 
 @media (max-aspect-ratio: 2/1) {
-  html {
+  html,
+  body {
     @apply overflow-y-hidden;
   }
   .video-game-legends {
-    @apply h-screen max-w-none;
+    @apply h-screen max-w-none overflow-y-hidden;
   }
 }

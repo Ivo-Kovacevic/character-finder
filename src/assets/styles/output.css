@@ -565,12 +565,14 @@ video {
 }
 
 @media (max-aspect-ratio: 2/1) {
-  html {
+  html,
+  body {
     overflow-y: hidden;
   }
 
   .video-game-legends {
     height: 100vh;
     max-width: none;
+    overflow-y: hidden;
   }
 }
