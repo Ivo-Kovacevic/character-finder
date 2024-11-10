@@ -554,75 +554,23 @@ video {
   display: none;
 }
 
-.hidden {
-  display: none;
+@media (min-aspect-ratio: 2/1) {
+  html {
+    overflow-x: hidden;
+  }
+
+  .video-game-legends {
+    width: 100%;
+  }
 }
 
-.aspect-auto {
-  aspect-ratio: auto;
-}
+@media (max-aspect-ratio: 2/1) {
+  html {
+    overflow-y: hidden;
+  }
 
-.h-screen {
-  height: 100vh;
-}
-
-.h-full {
-  height: 100%;
-}
-
-.h-\[\] {
-  height: ;
-}
-
-.h-\[1\] {
-  height: 1;
-}
-
-.h-\[100vh\] {
-  height: 100vh;
-}
-
-.h-\[98vh\] {
-  height: 98vh;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.w-screen {
-  width: 100vw;
-}
-
-.w-\[\] {
-  width: ;
-}
-
-.w-\[2500px\] {
-  width: 2500px;
-}
-
-.max-w-none {
-  max-width: none;
-}
-
-.overflow-scroll {
-  overflow: scroll;
-}
-
-.overflow-y-hidden {
-  overflow-y: hidden;
-}
-
-.overflow-y-clip {
-  overflow-y: clip;
-}
-
-.whitespace-nowrap {
-  white-space: nowrap;
-}
-
-.object-cover {
-  -o-object-fit: cover;
-     object-fit: cover;
+  .video-game-legends {
+    height: 100vh;
+    max-width: none;
+  }
 }

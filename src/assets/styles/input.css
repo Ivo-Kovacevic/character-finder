@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media (min-aspect-ratio: 2/1) {
+  html {
+    @apply overflow-x-hidden;
+  }
+  .video-game-legends {
+    @apply w-full;
+  }
+}
+
+@media (max-aspect-ratio: 2/1) {
+  html {
+    @apply overflow-y-hidden;
+  }
+  .video-game-legends {
+    @apply h-screen max-w-none;
+  }
+}
