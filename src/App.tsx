@@ -1,15 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
-import videoGameImage from "../public/images/video-game-legends.jpg";
+import videoGameImage from "./images/video-game-legends.jpg";
 import characterPositions from "./constants/positions";
-import { checkCharacterPosition, updateImageSize } from "./utils/utils";
+import { characterSize, checkCharacterPosition, updateImageSize } from "./utils/utils";
+import { CharacterPositionType } from "./@types/types";
 
 export default function App() {
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [clickedCharacter, setClickedCharacter] = useState<string | null>(null);
+  const [charactersToFind, setCharactersToFind] = useState<Record<
+    string,
+    CharacterPositionType
+  > | null>(null);
+  const [foundCharacters, setFoundCharacters] = useState<CharacterPositionType | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
+
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
+    const randomThreeCharacters = Object.keys(characterPositions)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+    const randomThreeCharactersPositions: Record<string, CharacterPositionType> = {};
+    randomThreeCharacters.map(
+      (name) => (randomThreeCharactersPositions[name] = characterPositions[name])
+    );
+    setCharactersToFind(randomThreeCharactersPositions);
+
     window.addEventListener("resize", () => updateImageSize(imageRef, setImageSize));
     return window.removeEventListener("resize", () => updateImageSize(imageRef, setImageSize));
   }, []);
@@ -17,15 +34,16 @@ export default function App() {
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
 
-    const x = ((e.clientX - rect.left) / imageSize.width) * 100;
-    const y = ((e.clientY - rect.top) / imageSize.height) * 100;
+    const xPixels = e.clientX - rect.left;
+    const yPixels = e.clientY - rect.top;
+    const x = (xPixels / imageSize.width) * 100;
+    const y = (yPixels / imageSize.height) * 100;
+
+    console.log(x, y);
 
     checkCharacterPosition({ x, y }, setClickedCharacter);
-    console.log({
-      x: x.toFixed(2),
-      y: y.toFixed(2),
-    });
-    setClickPosition({ x, y });
+    setClickPosition({ x: xPixels, y: yPixels });
+    setDropdownOpen(!dropdownOpen);
   };
 
   useEffect(() => {
@@ -43,6 +61,19 @@ export default function App() {
           src={videoGameImage}
           alt="video-game-legends"
         />
+
+        {charactersToFind && dropdownOpen && (
+          <div
+            className="absolute top-0 text-xl bg-cyan-500"
+            style={{ top: `${clickPosition.y}px`, left: `${clickPosition.x}px` }}
+          >
+            {Object.keys(charactersToFind).map((characterName) => (
+              <div className="p-4" key={characterName}>
+                {characterName}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* {Object.keys(characterPositions).map((characterKey) => {
           const position = characterPositions[characterKey];
