@@ -10,7 +10,9 @@ export type CharacterPositionType = {
   right: number;
 };
 
+export type CharactersPositionType = Record<string, CharacterPositionType>;
+
 export type ImageSizeType = {
-    height: number;
-    width: number;
-}
+  height: number;
+  width: number;
+};

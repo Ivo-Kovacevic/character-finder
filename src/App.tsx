@@ -1,32 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import videoGameImage from "./images/video-game-legends.jpg";
 import characterPositions from "./constants/positions";
-import { characterSize, checkCharacterPosition, updateImageSize } from "./utils/utils";
-import { CharacterPositionType } from "./@types/types";
+import { CharacterPositionType, CharactersPositionType } from "./@types/types";
+import { updateImageSize } from "./utils/imageUtils";
+import { checkCharacterPosition, getRandomThreeCharacters } from "./utils/characterUtils";
 
 export default function App() {
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [clickedCharacter, setClickedCharacter] = useState<string | null>(null);
-  const [charactersToFind, setCharactersToFind] = useState<Record<
-    string,
-    CharacterPositionType
-  > | null>(null);
-  const [foundCharacters, setFoundCharacters] = useState<CharacterPositionType | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [charactersToFind, setCharactersToFind] = useState<CharactersPositionType>(
+    getRandomThreeCharacters()
+  );
+  const [foundCharacters, setFoundCharacters] = useState<CharactersPositionType | null>(null);
+  const [pickedCharacter, setPickedCharacter] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(true);
   const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
 
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    const randomThreeCharacters = Object.keys(characterPositions)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 3);
-    const randomThreeCharactersPositions: Record<string, CharacterPositionType> = {};
-    randomThreeCharacters.map(
-      (name) => (randomThreeCharactersPositions[name] = characterPositions[name])
-    );
-    setCharactersToFind(randomThreeCharactersPositions);
-
     window.addEventListener("resize", () => updateImageSize(imageRef, setImageSize));
     return window.removeEventListener("resize", () => updateImageSize(imageRef, setImageSize));
   }, []);
@@ -41,18 +33,34 @@ export default function App() {
 
     console.log(x, y);
 
-    checkCharacterPosition({ x, y }, setClickedCharacter);
+    // checkCharacterPosition({ x, y }, setClickedCharacter);
     setClickPosition({ x: xPixels, y: yPixels });
     setDropdownOpen(!dropdownOpen);
   };
 
   useEffect(() => {
-    console.log(clickedCharacter);
-  }, [clickedCharacter]);
+    if (pickedCharacter) {
+      if (
+        checkCharacterPosition(
+          {
+            x: (clickPosition.x / imageSize.width) * 100,
+            y: (clickPosition.y / imageSize.height) * 100,
+          },
+          pickedCharacter
+        )
+      ) {
+        console.log(`You picked correct character`);
+        setCharactersToFind((prevCharactersToFind) => {
+          const { [pickedCharacter]: _, ...remainingCharacters } = prevCharactersToFind;
+          return remainingCharacters;
+        });
+      }
+    }
+  }, [pickedCharacter]);
 
   return (
     <>
-      <div className="relative video-game-legends">
+      <div className="relative video-game-legends w-max">
         <img
           ref={imageRef}
           onLoad={() => updateImageSize(imageRef, setImageSize)}
@@ -64,12 +72,24 @@ export default function App() {
 
         {charactersToFind && dropdownOpen && (
           <div
-            className="absolute top-0 text-xl bg-cyan-500"
+            className="absolute top-0 text-xl shadow-xl shadow-black"
             style={{ top: `${clickPosition.y}px`, left: `${clickPosition.x}px` }}
           >
             {Object.keys(charactersToFind).map((characterName) => (
-              <div className="p-4" key={characterName}>
-                {characterName}
+              <div
+                className="p-2 relative flex items-center bg-lime-600/30 backdrop-blur-sm hover:cursor-pointer hover:bg-lime-700/90 transition-all"
+                key={characterName}
+                onClick={() => setPickedCharacter(characterName)}
+              >
+                <img
+                  height="64px"
+                  width="64px"
+                  src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${characterName
+                    .split(" ")
+                    .join("_")}`}
+                  alt={characterName}
+                />
+                <h1 className="p-2">{characterName}</h1>
               </div>
             ))}
           </div>
