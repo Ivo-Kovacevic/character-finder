@@ -3,7 +3,8 @@ import { isBetween } from "./numberUtils";
 import { CharacterType, ClickPositionType, ImageSizeType, PositionType } from "../@types/types";
 
 export const getRandomThreeCharacters = () => {
-  return characters.sort(() => 0.5 - Math.random()).slice(0, 3);
+  const randomThreeCharacters = characters.sort(() => 0.5 - Math.random()).slice(0, 3);
+  return randomThreeCharacters;
 };
 
 export const checkCharacterPosition = (
