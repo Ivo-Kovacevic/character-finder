@@ -1,23 +1,14 @@
-import { CharacterPositionType, CharactersPositionType } from "../@types/types";
+import { CharacterType, ClickPositionType } from "../@types/types";
+import { useCharacterContext } from "../context/characterContext";
 
 type DropdownMenuType = {
   dropdownOpen: boolean;
-  clickPosition: {
-    x: number;
-    y: number;
-  };
-  charactersToFind: CharactersPositionType;
-  foundCharacters: CharactersPositionType;
-  setPickedCharacter: React.Dispatch<React.SetStateAction<string | null>>;
+  clickPosition: ClickPositionType;
 };
 
-export default function DropdownMenu({
-  dropdownOpen,
-  clickPosition,
-  charactersToFind,
-  foundCharacters,
-  setPickedCharacter,
-}: DropdownMenuType) {
+export default function DropdownMenu({ dropdownOpen, clickPosition }: DropdownMenuType) {
+  const { charactersToFind, foundCharacters, setPickedCharacter } = useCharacterContext();
+
   return (
     <>
       {dropdownOpen && (
@@ -25,23 +16,23 @@ export default function DropdownMenu({
           className="absolute top-0 text-xl shadow-xl shadow-black"
           style={{ top: `${clickPosition.y}px`, left: `${clickPosition.x}px` }}
         >
-          {Object.keys(charactersToFind).map(
-            (characterName) =>
-              !(characterName in foundCharacters) && (
+          {charactersToFind.map(
+            (character, index) =>
+              !foundCharacters.some((foundCharacter) => foundCharacter.name === character.name) && (
                 <div
                   className="p-2 relative flex items-center bg-lime-600/30 backdrop-blur-sm hover:cursor-pointer hover:bg-lime-700/90 transition-all"
-                  key={`${characterName} - dropdown`}
-                  onClick={() => setPickedCharacter(characterName)}
+                  key={`${character.name}-${index}-dropdown`}
+                  onClick={() => setPickedCharacter(character)}
                 >
                   <img
                     height="64px"
                     width="64px"
-                    src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${characterName
+                    src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.name
                       .split(" ")
                       .join("_")}`}
-                    alt={characterName}
+                    alt={character.name}
                   />
-                  <h1 className="p-2">{characterName}</h1>
+                  <h1 className="p-2">{character.name}</h1>
                 </div>
               )
           )}

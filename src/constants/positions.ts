@@ -1,6 +1,4 @@
-import { CharacterPositionType } from "../@types/types";
-const characterPositions: Record<string, CharacterPositionType> = JSON.parse(
-  import.meta.env.VITE_CHARACTER_POSITIONS
-);
+import { CharacterType } from "../@types/types";
+const characters: CharacterType[] = JSON.parse(import.meta.env.VITE_CHARACTER_POSITIONS);
 
-export default characterPositions;
+export default characters;

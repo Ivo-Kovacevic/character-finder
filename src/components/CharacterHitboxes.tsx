@@ -1,22 +1,22 @@
-import characterPositions from "../constants/positions";
-import { characterSize } from "../utils/characterUtils";
+import characters from "../constants/positions";
+import { hitboxSize } from "../utils/characterUtils";
 
 type ImageSizeType = {
-    imageSize: {
-        height: number;
-        width: number;
-    }
-}
+  imageSize: {
+    height: number;
+    width: number;
+  };
+};
 
-export default function CharacterHitboxes({imageSize}: ImageSizeType) {
+export default function CharacterHitboxes({ imageSize }: ImageSizeType) {
   return (
     <>
-      {Object.keys(characterPositions).map((characterKey) => {
-          const position = characterPositions[characterKey];
-          const { top, left, height, width } = characterSize(position, imageSize);
+      {characters.map((character) => {
+        return character.positions.map((position, index) => {
+          const { top, left, height, width } = hitboxSize(position, imageSize);
           return (
             <div
-              key={characterKey}
+              key={`${character.name}-${index}-hitbox`}
               className="absolute opacity-50 bg-white border-red-500 border-2"
               style={{
                 top: `${top}px`,
@@ -26,7 +26,8 @@ export default function CharacterHitboxes({imageSize}: ImageSizeType) {
               }}
             />
           );
-        })}
+        });
+      })}
     </>
   );
 }
