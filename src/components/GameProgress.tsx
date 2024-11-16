@@ -4,13 +4,22 @@ import { useCharacterContext } from "../context/characterContext";
 export default function GameProgress() {
   const { charactersToFind, foundCharacters } = useCharacterContext();
   const [time, setTime] = useState(0);
+  const [running, setRunning] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((prevTime) => prevTime + 10);
-    }, 10);
-    return () => clearInterval(interval);
+    if (running) {
+      const interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 10);
+      }, 10);
+      return () => clearInterval(interval);
+    }
   }, [time]);
+
+  useEffect(() => {
+    if (foundCharacters.length === charactersToFind.length) {
+      setRunning(false);
+    }
+  }, [foundCharacters]);
 
   const minutes = Math.floor(time / (1000 * 60));
   const seconds = Math.floor((time / 1000) % 60);
