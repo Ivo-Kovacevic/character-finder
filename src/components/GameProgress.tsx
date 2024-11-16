@@ -5,10 +5,10 @@ export default function GameProgress() {
 
   return (
     <>
-      <div className="fixed w-full flex justify-center top-0 left-1/2 -translate-x-1/2">
+      <div className="fixed w-max flex justify-center top-0 left-1/2 -translate-x-1/2 z-10">
         {charactersToFind.map((character, index) => (
           <div
-            className="relative m-4 hover:scale-150 transition"
+            className={`relative hover:scale-150 transition mt-4 ${index === 1 && "mx-4"}`}
             key={`${character.name}-${index}-result`}
           >
             <img

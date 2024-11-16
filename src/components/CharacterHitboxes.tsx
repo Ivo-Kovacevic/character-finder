@@ -1,4 +1,5 @@
 import characters from "../constants/positions";
+import { useCharacterContext } from "../context/characterContext";
 import { hitboxSize } from "../utils/characterUtils";
 
 type ImageSizeType = {
@@ -9,15 +10,17 @@ type ImageSizeType = {
 };
 
 export default function CharacterHitboxes({ imageSize }: ImageSizeType) {
+  const { foundCharacters } = useCharacterContext();
+
   return (
     <>
-      {characters.map((character) => {
+      {foundCharacters.map((character) => {
         return character.positions.map((position, index) => {
           const { top, left, height, width } = hitboxSize(position, imageSize);
           return (
             <div
               key={`${character.name}-${index}-hitbox`}
-              className="absolute opacity-50 bg-white border-red-500 border-2"
+              className="absolute opacity-50 bg-white border-red-500 border-2 pointer-events-none"
               style={{
                 top: `${top}px`,
                 left: `${left}px`,

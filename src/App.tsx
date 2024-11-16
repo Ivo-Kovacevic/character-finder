@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <>
-      <div className="relative video-game-legends w-max font-jersey">
+      <div className="relative w-max font-jersey">
         <img
           ref={imageRef}
           onLoad={() => updateImageSize(imageRef, setImageSize)}
@@ -80,7 +80,7 @@ export default function App() {
           </>
         )}
 
-        {/* <CharacterHitboxes imageSize={imageSize} /> */}
+        <CharacterHitboxes imageSize={imageSize} />
       </div>
     </>
   );

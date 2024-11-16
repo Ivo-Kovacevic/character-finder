@@ -13,14 +13,14 @@ export default function DropdownMenu({ dropdownOpen, clickPosition }: DropdownMe
     <>
       {dropdownOpen && (
         <div
-          className="absolute top-0 text-xl shadow-xl shadow-black"
+          className="absolute top-0 text-xl text-white shadow-xl shadow-black"
           style={{ top: `${clickPosition.y}px`, left: `${clickPosition.x}px` }}
         >
           {charactersToFind.map(
             (character, index) =>
               !foundCharacters.some((foundCharacter) => foundCharacter.name === character.name) && (
                 <div
-                  className="p-2 relative flex items-center bg-lime-600/30 backdrop-blur-sm hover:cursor-pointer hover:bg-lime-700/90 transition-all"
+                  className="p-2 relative flex items-center bg-black/75 hover:cursor-pointer hover:bg-lime-700/90 transition z-20"
                   key={`${character.name}-${index}-dropdown`}
                   onClick={() => setPickedCharacter(character)}
                 >
