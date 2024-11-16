@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <>
-      <div className="relative w-max font-jersey">
+      <div className="video-game-legends relative w-max font-jersey">
         <img
           ref={imageRef}
           onLoad={() => updateImageSize(imageRef, setImageSize)}

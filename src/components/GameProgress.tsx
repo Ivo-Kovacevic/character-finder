@@ -1,10 +1,24 @@
+import { useEffect, useState } from "react";
 import { useCharacterContext } from "../context/characterContext";
 
 export default function GameProgress() {
   const { charactersToFind, foundCharacters } = useCharacterContext();
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((prevTime) => prevTime + 10);
+    }, 10);
+    return () => clearInterval(interval);
+  }, [time]);
+
+  const minutes = Math.floor(time / (1000 * 60));
+  const seconds = Math.floor((time / 1000) % 60);
+  const milliseconds = Math.floor((time % 1000) / 10);
 
   return (
     <>
+      {/* Results */}
       <div className="fixed w-max flex justify-center top-0 left-1/2 -translate-x-1/2 z-10">
         {charactersToFind.map((character, index) => (
           <div
@@ -29,6 +43,15 @@ export default function GameProgress() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Timer */}
+      <div className="fixed w-max flex text-white text-center p-1 mb-2 text-4xl bg-black/75 justify-center bottom-0 left-1/2 -translate-x-1/2 z-10">
+        <span className="w-10 block">{minutes.toString().padStart(2, "0")}</span>
+        <span>:</span>
+        <span className="w-10 block">{seconds.toString().padStart(2, "0")}</span>
+        <span>:</span>
+        <span className="w-10 block">{milliseconds.toString().padStart(2, "0")}</span>
       </div>
     </>
   );

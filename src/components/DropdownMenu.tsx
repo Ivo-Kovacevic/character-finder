@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { CharacterType, ClickPositionType } from "../@types/types";
 import { useCharacterContext } from "../context/characterContext";
 
