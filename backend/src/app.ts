@@ -4,8 +4,8 @@ import session from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuid } from "uuid";
-import { CharacterType, ClickPositionType } from "./@types/express.js";
-import { isBetween } from "./utils/number.js";
+import { CharacterType, ClickPositionType, EndBody, StartBody } from "./@types/express.js";
+import { checkPositions } from "./utils/positionUtils.js";
 
 declare module "express-session" {
   interface SessionData {
@@ -17,6 +17,7 @@ declare module "express-session" {
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000");
+const prisma = new PrismaClient();
 
 app.use(
   cors({
@@ -33,42 +34,39 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new PrismaSessionStore(new PrismaClient(), {
-      checkPeriod: 2 * 60 * 1000, //ms
+      checkPeriod: 60 * 60 * 1000, //ms
       dbRecordIdIsSessionId: true,
       dbRecordIdFunction: undefined,
     }),
   })
 );
 
-app.use("/start", (req: Request<{}, {}, CharacterType[], {}>, res: Response) => {
+app.use("/start", (req: Request<{}, {}, StartBody, {}>, res: Response) => {
   req.session.userId = uuid();
   req.session.charactersToFind = req.body;
   res.sendStatus(200);
 });
 
-app.use("/end", (req: Request<{}, {}, ClickPositionType[], {}>, res: Response) => {
+app.use("/end", async (req: Request<{}, {}, EndBody, {}>, res: Response) => {
   const { userId, charactersToFind } = req.session;
-  const clickPositions = req.body;
+  const { username, time, clickPositions } = req.body;
   if (!userId || !charactersToFind || !clickPositions) {
     res.sendStatus(400);
     return;
   }
-  const checkPositions = clickPositions.every((clickPosition) => {
-    return charactersToFind.some((character) => {
-      return character.positions.some((position) => {
-        return (
-          isBetween(clickPosition.x, position.left, position.right) &&
-          isBetween(clickPosition.y, position.top, position.bottom)
-        );
-      });
-    });
-  });
 
-  if (checkPositions) {
-    res.sendStatus(200);
+  if (!checkPositions(clickPositions, charactersToFind)) {
+    res.sendStatus(400);
     return;
   }
-  res.sendStatus(400);
+
+  // await prisma.leaderboard.create({
+  //   data: {
+  //     username,
+  //     time,
+  //   },
+  // });
+  res.sendStatus(200);
 });
 
 app.listen(PORT, () => console.log("App is live"));

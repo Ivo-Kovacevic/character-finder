@@ -1,7 +1,15 @@
+export type StartBody = CharacterType[];
+
+export type EndBody = {
+  username: string;
+  time: number;
+  clickPositions: ClickPositionType[];
+};
+
 export type ClickPositionType = {
   x: number;
   y: number;
-};
+}
 
 export type CharacterType = {
   name: string;
@@ -13,9 +21,4 @@ export type PositionType = {
   bottom: number;
   left: number;
   right: number;
-};
-
-export type ImageSizeType = {
-  height: number;
-  width: number;
 };

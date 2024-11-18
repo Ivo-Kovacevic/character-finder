@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { useCharacterContext } from "../context/characterContext";
 
-export default function GameProgress() {
+type GameProgress = {
+  time: number;
+  setTime: React.Dispatch<React.SetStateAction<number>>;
+};
+
+export default function GameProgress({ time, setTime }: GameProgress) {
   const { charactersToFind, foundCharacters } = useCharacterContext();
-  const [time, setTime] = useState(0);
   const [running, setRunning] = useState(true);
 
   useEffect(() => {

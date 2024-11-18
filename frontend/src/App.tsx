@@ -26,6 +26,7 @@ export default function App() {
   const [clickPositions, setClickPositions] = useState<ClickPositionType[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
+  const [time, setTime] = useState(0);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -67,7 +68,7 @@ export default function App() {
           mode: "cors",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(clickPositions),
+          body: JSON.stringify({clickPositions, time}),
         });
         if (!response.ok) {
           return;
@@ -100,10 +101,10 @@ export default function App() {
         />
 
         {!gameReady ? (
-          <GameSetup setUsername={setUsername} setGameReady={setGameReady} />
+          <GameSetup setGameReady={setGameReady} />
         ) : (
           <>
-            <GameProgress />
+            <GameProgress time={time} setTime={setTime}/>
             <DropdownMenu dropdownOpen={dropdownOpen} clickPosition={clickPosition} />
           </>
         )}

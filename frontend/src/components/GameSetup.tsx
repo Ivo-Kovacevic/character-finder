@@ -2,11 +2,10 @@ import { useEffect } from "react";
 import { useCharacterContext } from "../context/characterContext";
 
 type GameSetupType = {
-  setUsername: React.Dispatch<React.SetStateAction<string>>;
   setGameReady: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function GameSetup({ setUsername, setGameReady }: GameSetupType) {
+export default function GameSetup({ setGameReady }: GameSetupType) {
   const { charactersToFind } = useCharacterContext();
 
   const startGame = async () => {
