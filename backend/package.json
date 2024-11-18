@@ -15,16 +15,21 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
+    "pg": "^8.13.1",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
+    "@types/pg": "^8.11.10",
     "prisma": "^5.22.0",
     "typescript": "^5.6.3"
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import videoGameImage from "./images/video-game-legends.jpg";
-import { CharacterType } from "./@types/types";
+import { CharacterType, ClickPositionType } from "./@types/types";
 import { updateImageSize } from "./utils/imageUtils";
 import { checkCharacterPosition, getRandomThreeCharacters } from "./utils/characterUtils";
 import CharacterHitboxes from "./components/CharacterHitboxes";
@@ -23,6 +23,7 @@ export default function App() {
   const [gameReady, setGameReady] = useState(false);
   const [username, setUsername] = useState("");
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [clickPositions, setClickPositions] = useState<ClickPositionType[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
 
@@ -45,11 +46,38 @@ export default function App() {
         )
       ) {
         setFoundCharacters((prevFoundCharacters) => [pickedCharacter, ...prevFoundCharacters]);
+        setClickPositions((prevClickPositions) => [
+          {
+            x: (clickPosition.x / imageSize.width) * 100,
+            y: (clickPosition.y / imageSize.height) * 100,
+          },
+          ...prevClickPositions,
+        ]);
       }
       setPickedCharacter(null);
       setDropdownOpen(false);
     }
   }, [pickedCharacter]);
+
+  useEffect(() => {
+    const endGame = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/end", {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(clickPositions),
+        });
+        if (!response.ok) {
+          return;
+        }
+      } catch (error) {}
+    };
+    if (charactersToFind.length === foundCharacters.length) {
+      endGame();
+    }
+  }, [foundCharacters]);
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -80,7 +108,7 @@ export default function App() {
           </>
         )}
 
-        <CharacterHitboxes imageSize={imageSize} />
+        {/* <CharacterHitboxes imageSize={imageSize} /> */}
       </div>
     </>
   );

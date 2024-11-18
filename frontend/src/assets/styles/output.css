@@ -612,11 +612,6 @@ video {
   margin-bottom: 1rem;
 }
 
-.my-8 {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -704,10 +699,6 @@ video {
 
 .bg-black\/75 {
   background-color: rgb(0 0 0 / 0.75);
-}
-
-.bg-lime-600\/20 {
-  background-color: rgb(101 163 13 / 0.2);
 }
 
 .bg-lime-600\/50 {

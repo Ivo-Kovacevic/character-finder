@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useCharacterContext } from "../context/characterContext";
 
 type GameSetupType = {
@@ -8,23 +9,27 @@ type GameSetupType = {
 export default function GameSetup({ setUsername, setGameReady }: GameSetupType) {
   const { charactersToFind } = useCharacterContext();
 
+  const startGame = async () => {
+    try {
+      setGameReady(true);
+      const response = await fetch("http://localhost:3000/start", {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(charactersToFind),
+      });
+      if (!response.ok) {
+        return;
+      }
+    } catch (error) {}
+  };
+
   return (
     <>
       <div className="fixed inset-0 flex justify-center items-center z-50 bg-black/75">
         <div className="text-white border-2 border-lime-600 rounded p-4">
           <h1 className="text-center text-4xl">Video Game Legends</h1>
-
-          <form className="my-8" id="form" onSubmit={() => setGameReady(true)}>
-            <label htmlFor="name">Username:</label>
-            <br />
-            <input
-              onChange={(e) => setUsername(e.target.value)}
-              type="text"
-              className="name rounded w-full bg-lime-600/20 border-2 border-lime-600 focus:outline-white"
-              id="name"
-              required
-            />
-          </form>
 
           <h2>Find these characters:</h2>
           {charactersToFind.map((character, index) => (
@@ -42,9 +47,8 @@ export default function GameSetup({ setUsername, setGameReady }: GameSetupType) 
             </div>
           ))}
           <button
-            type="submit"
-            form="form"
             className="text-center w-full bg-lime-700 rounded py-2 hover:bg-lime-900 focus:outline-white"
+            onClick={startGame}
           >
             Start
           </button>

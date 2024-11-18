@@ -14,9 +14,9 @@ datasource db {
 }
 
 model Leaderboard {
-  id        Int     @id @default(autoincrement())
-  username  String
-  time      Int 
+  id          Int         @id @default(autoincrement())
+  username    String
+  time        Int 
 }
 
 model Character {
@@ -26,11 +26,18 @@ model Character {
 }
 
 model Position {
-  id          Int       @id @default(autoincrement())
-  character   Character @relation(fields: [characterId], references: [id])
+  id          Int         @id @default(autoincrement())
+  character   Character   @relation(fields: [characterId], references: [id])
   characterId Int
   top         Float
   bottom      Float
   left        Float
   right       Float
+}
+
+model Session {
+  id          String      @id
+  sid         String      @unique
+  data        String
+  expiresAt   DateTime
 }
