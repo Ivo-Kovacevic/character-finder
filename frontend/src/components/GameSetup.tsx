@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { useCharacterContext } from "../context/characterContext";
+import { GameStatus } from "../@types/types";
 
 type GameSetupType = {
-  setGameReady: React.Dispatch<React.SetStateAction<boolean>>;
+  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
 };
 
-export default function GameSetup({ setGameReady }: GameSetupType) {
+export default function GameSetup({ setGameStatus }: GameSetupType) {
   const { charactersToFind } = useCharacterContext();
 
   const startGame = async () => {
     try {
-      setGameReady(true);
+      setGameStatus("running");
       const response = await fetch("http://localhost:3000/start", {
         method: "POST",
         mode: "cors",

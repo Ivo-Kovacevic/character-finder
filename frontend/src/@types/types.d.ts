@@ -19,3 +19,11 @@ export type ImageSizeType = {
   height: number;
   width: number;
 };
+
+export type GameStatus = "not-started" | "running" | "finished";
+
+export type LeaderboardType = {
+  id: number;
+  username: string;
+  time: number;
+};

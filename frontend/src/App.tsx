@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import videoGameImage from "./images/video-game-legends.jpg";
-import { CharacterType, ClickPositionType } from "./@types/types";
+import { CharacterType, ClickPositionType, GameStatus } from "./@types/types";
 import { updateImageSize } from "./utils/imageUtils";
 import { checkCharacterPosition, getRandomThreeCharacters } from "./utils/characterUtils";
 import CharacterHitboxes from "./components/CharacterHitboxes";
-import DropdownMenu from "./components/DropdownMenu";
 import characters from "./constants/positions";
 import { useCharacterContext } from "./context/characterContext";
 import GameSetup from "./components/GameSetup";
 import GameProgress from "./components/GameProgress";
+import DropdownMenu from "./components/DropdownMenu";
+import End from "./components/End";
 
 export default function App() {
   const {
@@ -20,8 +21,8 @@ export default function App() {
     setPickedCharacter,
   } = useCharacterContext();
 
-  const [gameReady, setGameReady] = useState(false);
-  const [username, setUsername] = useState("");
+  const [gameStatus, setGameStatus] = useState<GameStatus>("finished");
+  const [username, setUsername] = useState("Arthur");
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [clickPositions, setClickPositions] = useState<ClickPositionType[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -68,7 +69,7 @@ export default function App() {
           mode: "cors",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({clickPositions, time}),
+          body: JSON.stringify({ clickPositions, time, username }),
         });
         if (!response.ok) {
           return;
@@ -94,18 +95,24 @@ export default function App() {
         <img
           ref={imageRef}
           onLoad={() => updateImageSize(imageRef, setImageSize)}
-          className={`video-game-legends ${!gameReady && "blur-sm"}`}
+          className={`video-game-legends ${gameStatus !== "running" && "blur-sm"}`}
           onClick={(e) => handleImageClick(e)}
           src={videoGameImage}
           alt="video-game-legends"
         />
 
-        {!gameReady ? (
-          <GameSetup setGameReady={setGameReady} />
+        {gameStatus === "not-started" ? (
+          <>
+            <GameSetup setGameStatus={setGameStatus} />
+          </>
+        ) : gameStatus === "running" ? (
+          <>
+            <GameProgress time={time} setTime={setTime} />
+            <DropdownMenu dropdownOpen={dropdownOpen} clickPosition={clickPosition} />
+          </>
         ) : (
           <>
-            <GameProgress time={time} setTime={setTime}/>
-            <DropdownMenu dropdownOpen={dropdownOpen} clickPosition={clickPosition} />
+            <End />
           </>
         )}
 
