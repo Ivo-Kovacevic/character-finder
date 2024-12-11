@@ -35,7 +35,7 @@ app.use(
     saveUninitialized: false,
     store: new PrismaSessionStore(new PrismaClient(), {
       checkPeriod: 60 * 60 * 1000, //ms
-      dbRecordIdIsSessionId: true,
+      dbRecordIdIsSessionId: false,
       dbRecordIdFunction: undefined,
     }),
   })
@@ -66,7 +66,15 @@ app.use("/end", async (req: Request<{}, {}, EndBody, {}>, res: Response) => {
   //     time,
   //   },
   // });
-  res.sendStatus(200);
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Failed to destroy session:", err);
+      res.sendStatus(500);
+      return;
+    }
+    res.clearCookie("connect.sid");
+    res.sendStatus(200);
+  });
 });
 
 app.listen(PORT, () => console.log("App is live"));
