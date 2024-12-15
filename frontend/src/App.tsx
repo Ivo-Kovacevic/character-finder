@@ -6,6 +6,7 @@ import { checkCharacterPosition, getRandomThreeCharacters } from "./utils/charac
 import CharacterHitboxes from "./components/CharacterHitboxes";
 import characters from "./constants/positions";
 import { useCharacterContext } from "./context/characterContext";
+import { useGameContext } from "./context/gameContext";
 import GameSetup from "./components/GameSetup";
 import GameProgress from "./components/GameProgress";
 import DropdownMenu from "./components/DropdownMenu";
@@ -21,13 +22,17 @@ export default function App() {
     setPickedCharacter,
   } = useCharacterContext();
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>("finished");
-  const [username, setUsername] = useState("Arthur");
-  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
-  const [clickPositions, setClickPositions] = useState<ClickPositionType[]>([]);
+  const {
+    gameStatus,
+    setGameStatus,
+    clickPosition,
+    setClickPosition,
+    clickPositions,
+    setClickPositions,
+  } = useGameContext();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
-  const [time, setTime] = useState(0);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -62,22 +67,8 @@ export default function App() {
   }, [pickedCharacter]);
 
   useEffect(() => {
-    const endGame = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/end", {
-          method: "POST",
-          mode: "cors",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ clickPositions, time, username }),
-        });
-        if (!response.ok) {
-          return;
-        }
-      } catch (error) {}
-    };
     if (charactersToFind.length === foundCharacters.length) {
-      endGame();
+      setGameStatus("finished");
     }
   }, [foundCharacters]);
 
@@ -107,7 +98,7 @@ export default function App() {
           </>
         ) : gameStatus === "running" ? (
           <>
-            <GameProgress time={time} setTime={setTime} />
+            <GameProgress />
             <DropdownMenu dropdownOpen={dropdownOpen} clickPosition={clickPosition} />
           </>
         ) : (
