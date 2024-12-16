@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LeaderboardType } from "../@types/types";
 import { useGameContext } from "../context/gameContext";
 
@@ -19,21 +19,27 @@ export default function End() {
         return;
       }
       getLeaderboard();
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error saving result");
+    }
   };
 
   const getLeaderboard = async () => {
-    const response = await fetch("http://localhost:3000/leaderboard", {
-      method: "get",
-      mode: "cors",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
-    if (!response.ok) {
-      return;
+    try {
+      const response = await fetch("http://localhost:3000/leaderboard", {
+        method: "get",
+        mode: "cors",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) {
+        return;
+      }
+      const data: LeaderboardType[] = await response.json();
+      setLeaderboard(data);
+    } catch (error) {
+      console.error("Error retrieving leaderboard");
     }
-    const data: LeaderboardType[] = await response.json();
-    setLeaderboard(data);
   };
 
   return (

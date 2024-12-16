@@ -1,13 +1,9 @@
-import { useEffect } from "react";
 import { useCharacterContext } from "../context/characterContext";
-import { GameStatus } from "../@types/types";
+import { useGameContext } from "../context/gameContext";
 
-type GameSetupType = {
-  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
-};
-
-export default function GameSetup({ setGameStatus }: GameSetupType) {
+export default function GameSetup() {
   const { charactersToFind } = useCharacterContext();
+  const { setGameStatus } = useGameContext();
 
   const startGame = async () => {
     try {
@@ -22,7 +18,9 @@ export default function GameSetup({ setGameStatus }: GameSetupType) {
       if (!response.ok) {
         return;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error starting game.");
+    }
   };
 
   return (

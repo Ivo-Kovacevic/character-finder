@@ -94,7 +94,7 @@ export default function App() {
 
         {gameStatus === "not-started" ? (
           <>
-            <GameSetup setGameStatus={setGameStatus} />
+            <GameSetup />
           </>
         ) : gameStatus === "running" ? (
           <>
