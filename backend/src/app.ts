@@ -6,6 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { v4 as uuid } from "uuid";
 import { CharacterType, ClickPositionType, EndBody, StartBody } from "./@types/express.js";
 import { checkPositions } from "./utils/positionUtils.js";
+import { clearSessionMiddleware } from "./middlewares/clearSessionMiddleware.js";
 
 declare module "express-session" {
   interface SessionData {
@@ -34,10 +35,13 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new PrismaSessionStore(new PrismaClient(), {
-      checkPeriod: 60 * 60 * 1000, //ms
+      checkPeriod: 24 * 60 * 60 * 1000,
       dbRecordIdIsSessionId: false,
       dbRecordIdFunction: undefined,
     }),
+    cookie: {
+      maxAge: 60 * 60 * 1000,
+    },
   })
 );
 
@@ -47,9 +51,18 @@ app.use("/start", (req: Request<{}, {}, StartBody, {}>, res: Response) => {
   res.sendStatus(200);
 });
 
+app.use("/leaderboard", clearSessionMiddleware, async (req: Request, res: Response) => {
+  const leaderboard = await prisma.leaderboard.findMany({
+    orderBy: { time: "asc" },
+    take: 10,
+  });
+  res.status(200).json(leaderboard);
+});
+
 app.use("/end", async (req: Request<{}, {}, EndBody, {}>, res: Response) => {
   const { userId, charactersToFind } = req.session;
   const { username, time, clickPositions } = req.body;
+
   if (!userId || !charactersToFind || !clickPositions) {
     res.sendStatus(400);
     return;
@@ -60,19 +73,14 @@ app.use("/end", async (req: Request<{}, {}, EndBody, {}>, res: Response) => {
     return;
   }
 
-  // await prisma.leaderboard.create({
-  //   data: {
-  //     username,
-  //     time,
-  //   },
-  // });
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Failed to destroy session:", err);
-      res.sendStatus(500);
-      return;
-    }
-    res.clearCookie("connect.sid");
+  await prisma.leaderboard.create({
+    data: {
+      username,
+      time,
+    },
+  });
+
+  clearSessionMiddleware(req, res, () => {
     res.sendStatus(200);
   });
 });
