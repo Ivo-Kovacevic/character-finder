@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { LeaderboardType } from "../@types/types";
 import { useGameContext } from "../context/gameContext";
+import { useCharacterContext } from "../context/characterContext";
+import { getRandomThreeCharacters } from "../utils/characterUtils";
 
 export default function End() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
-  const { clickPositions, time, username, setUsername } = useGameContext();
+  const { setCharactersToFind } = useCharacterContext();
+  const { clickPositions, time, username, setUsername, setGameStatus, setTime, setClickPositions } =
+    useGameContext();
 
   const saveResult = async () => {
     try {
@@ -42,6 +46,13 @@ export default function End() {
     }
   };
 
+  const replayGame = () => {
+    setGameStatus("not-started");
+    setTime(0);
+    setClickPositions([]);
+    setCharactersToFind(getRandomThreeCharacters());
+  };
+
   return (
     <>
       <div className="fixed inset-0 flex justify-center items-center z-50 bg-black/75">
@@ -55,6 +66,12 @@ export default function End() {
                 <span>{record.time}</span>
               </div>
             ))}
+            <button
+              onClick={replayGame}
+              className="w-full bg-lime-600 rounded mt-4 hover:bg-lime-800"
+            >
+              Play again
+            </button>
           </div>
         ) : (
           <div className="text-white border-2 border-lime-600 rounded p-4">
@@ -81,7 +98,7 @@ export default function End() {
               onClick={getLeaderboard}
               className="w-full border-2 rounded text-lime-600 border-lime-600 hover:border-lime-400 hover:text-lime-400"
             >
-              No thanks
+              I just want to see leaderboard
             </button>
           </div>
         )}
