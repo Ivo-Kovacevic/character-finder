@@ -3,16 +3,14 @@ import cors from "cors";
 import session from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
-import { v4 as uuid } from "uuid";
-import { CharacterType, ClickPositionType, EndBody, StartBody } from "./@types/express.js";
-import { checkPositions } from "./utils/positionUtils.js";
-import { clearSessionMiddleware } from "./middlewares/clearSessionMiddleware.js";
+import router from "./routes/index.js";
 
 declare module "express-session" {
   interface SessionData {
     userId: string;
-    charactersToFind: CharacterType[];
-    clickPositions: ClickPositionType[];
+    charactersToFind: string[];
+    startTime: number;
+    elapsedTime: number;
   }
 }
 
@@ -45,44 +43,6 @@ app.use(
   })
 );
 
-app.use("/start", (req: Request<{}, {}, StartBody, {}>, res: Response) => {
-  req.session.userId = uuid();
-  req.session.charactersToFind = req.body;
-  res.sendStatus(200);
-});
-
-app.use("/leaderboard", clearSessionMiddleware, async (req: Request, res: Response) => {
-  const leaderboard = await prisma.leaderboard.findMany({
-    orderBy: { time: "asc" },
-    take: 10,
-  });
-  res.status(200).json(leaderboard);
-});
-
-app.use("/end", async (req: Request<{}, {}, EndBody, {}>, res: Response) => {
-  const { userId, charactersToFind } = req.session;
-  const { username, time, clickPositions } = req.body;
-
-  if (!userId || !charactersToFind || !clickPositions) {
-    res.sendStatus(400);
-    return;
-  }
-
-  if (!checkPositions(clickPositions, charactersToFind)) {
-    res.sendStatus(400);
-    return;
-  }
-
-  await prisma.leaderboard.create({
-    data: {
-      username,
-      time,
-    },
-  });
-
-  clearSessionMiddleware(req, res, () => {
-    res.sendStatus(200);
-  });
-});
+app.use("/", router);
 
 app.listen(PORT, () => console.log("App is live"));

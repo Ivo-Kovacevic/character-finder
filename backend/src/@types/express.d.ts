@@ -1,5 +1,10 @@
 export type StartBody = CharacterType[];
 
+export type CheckBody = {
+  characterName: string;
+  clickPosition: ClickPositionType;
+}
+
 export type EndBody = {
   username: string;
   time: number;
