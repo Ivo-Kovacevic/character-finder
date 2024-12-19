@@ -15,6 +15,7 @@ export const initGame = async (req: Request, res: Response) => {
   });
 
   const characterNames = charactersToFind.map((character) => character.name);
+  req.session.charactersToFind = characterNames;
 
   res.status(200).json(characterNames);
 };
@@ -24,10 +25,7 @@ export const startGame = async (req: Request<{}, {}, StartBody, {}>, res: Respon
   res.sendStatus(200);
 };
 
-export const checkCharacterPosition = async (
-  req: Request<{}, {}, CheckBody, {}>,
-  res: Response
-) => {
+export const checkCharacterPosition = async (req: Request<{}, {}, CheckBody, {}>, res: Response) => {
   const characterName = req.body.characterName;
   const clickPosition = req.body.clickPosition;
 
@@ -42,15 +40,12 @@ export const checkCharacterPosition = async (
   }
 
   if (await checkPositionForCharacter(clickPosition, characterName)) {
-    req.session.charactersToFind = req.session.charactersToFind.filter(
-      (name) => name !== characterName
-    );
+    req.session.charactersToFind = req.session.charactersToFind.filter((name) => name !== characterName);
     if (req.session.charactersToFind.length === 0) {
       const endTime = Date.now();
-      const time = Math.floor(endTime - req.session.startTime);
-      req.session.elapsedTime = time;
+      req.session.elapsedTime = Math.floor(endTime - req.session.startTime);
     }
-    res.sendStatus(200);
+    res.status(200).json(req.session.charactersToFind);
   } else {
     res.sendStatus(400);
   }
@@ -73,12 +68,14 @@ export const endGame = async (req: Request<{}, {}, EndBody, {}>, res: Response) 
     return;
   }
 
-  await prisma.leaderboard.create({
-    data: {
-      username: username,
-      time: elapsedTime,
-    },
-  });
+  // await prisma.leaderboard.create({
+  //   data: {
+  //     username: username,
+  //     time: elapsedTime,
+  //   },
+  // });
+
+  console.log("Finished");
 
   clearSessionMiddleware(req, res, () => {
     res.sendStatus(200);
