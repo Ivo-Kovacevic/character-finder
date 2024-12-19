@@ -3,12 +3,12 @@ import { LeaderboardType } from "../@types/types";
 import { useGameContext } from "../context/gameContext";
 import { useCharacterContext } from "../context/characterContext";
 import { getRandomThreeCharacters } from "../utils/characterUtils";
+import { minuteSecondMillisecond } from "../utils/numberUtils";
 
 export default function End() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
   const { setCharactersToFind } = useCharacterContext();
-  const { clickPositions, time, username, setUsername, setGameStatus, setTime, setClickPositions } =
-    useGameContext();
+  const { time, username, setUsername, setGameStatus, setTime } = useGameContext();
 
   const saveResult = async () => {
     try {
@@ -17,7 +17,7 @@ export default function End() {
         mode: "cors",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clickPositions, time, username }),
+        body: JSON.stringify({ time, username }),
       });
       if (!response.ok) {
         return;
@@ -46,12 +46,14 @@ export default function End() {
     }
   };
 
-  const replayGame = () => {
-    setGameStatus("not-started");
-    setTime(0);
-    setClickPositions([]);
-    setCharactersToFind(getRandomThreeCharacters());
-  };
+  const elapsedTime = minuteSecondMillisecond;
+
+  // const replayGame = () => {
+  //   setGameStatus("not-started");
+  //   setTime(0);
+  //   setClickPositions([]);
+  //   setCharactersToFind(getRandomThreeCharacters());
+  // };
 
   return (
     <>
@@ -66,16 +68,14 @@ export default function End() {
                 <span>{record.time}</span>
               </div>
             ))}
-            <button
-              onClick={replayGame}
-              className="w-full bg-lime-600 rounded mt-4 hover:bg-lime-800"
-            >
+            {/* <button onClick={replayGame} className="w-full bg-lime-600 rounded mt-4 hover:bg-lime-800">
               Play again
-            </button>
+            </button> */}
           </div>
         ) : (
           <div className="text-white border-2 border-lime-600 rounded p-4">
             <h1>Do you want to save result?</h1>
+            <h2 className="text-center text-2xl">{minuteSecondMillisecond(time)}</h2>
             <form
               action=""
               onSubmit={(e) => {

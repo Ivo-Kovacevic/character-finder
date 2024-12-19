@@ -17,7 +17,7 @@ export default function GameProgress() {
   }, [time]);
 
   useEffect(() => {
-    if (foundCharacters.length === charactersToFind.length) {
+    if (charactersToFind.length === 0) {
       setRunning(false);
     }
   }, [foundCharacters]);
@@ -33,22 +33,20 @@ export default function GameProgress() {
         {charactersToFind.map((character, index) => (
           <div
             className={`relative hover:scale-150 transition mt-4 ${index === 1 && "mx-4"}`}
-            key={`${character.name}-${index}-result`}
+            key={`${character}-${index}-result`}
           >
             <img
               className={`shadow shadow-black border-4 rounded-2xl ${
-                foundCharacters.some((foundCharacter) => foundCharacter.name === character.name)
+                foundCharacters.some((foundCharacter) => foundCharacter.name === character)
                   ? "border-lime-600"
                   : "border-gray-500"
               }`}
               height="64px"
               width="64px"
-              src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.name
-                .split(" ")
-                .join("_")}`}
-              alt={character.name}
+              src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.split(" ").join("_")}`}
+              alt={character}
             />
-            {foundCharacters.some((foundCharacter) => foundCharacter.name === character.name) && (
+            {foundCharacters.some((foundCharacter) => foundCharacter.name === character) && (
               <div className="absolute top-0 left-0 h-full w-full rounded-xl bg-lime-600/50" />
             )}
           </div>

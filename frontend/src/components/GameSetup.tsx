@@ -31,17 +31,15 @@ export default function GameSetup() {
 
           <h2>Find these characters:</h2>
           {charactersToFind.map((character, index) => (
-            <div className="my-4 flex items-center" key={`${character.name}-${index}-setup`}>
+            <div className="my-4 flex items-center" key={`${character}-${index}-setup`}>
               <img
                 className="shadow shadow-black border-4 rounded-2xl hover:scale-150 transition"
                 height="64px"
                 width="64px"
-                src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.name
-                  .split(" ")
-                  .join("_")}`}
-                alt={character.name}
+                src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.split(" ").join("_")}`}
+                alt={character}
               />
-              <p className="p-2">{character.name}</p>
+              <p className="p-2">{character}</p>
             </div>
           ))}
           <button

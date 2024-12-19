@@ -8,10 +8,12 @@ type GameContextType = {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   clickPosition: ClickPositionType;
   setClickPosition: React.Dispatch<React.SetStateAction<ClickPositionType>>;
-  clickPositions: ClickPositionType[];
-  setClickPositions: React.Dispatch<React.SetStateAction<ClickPositionType[]>>;
   time: number;
   setTime: React.Dispatch<React.SetStateAction<number>>;
+  imageSize: { height: number; width: number };
+  setImageSize: React.Dispatch<React.SetStateAction<{ height: number; width: number }>>;
+  dropdownOpen: boolean;
+  setDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 export const GameContext = createContext<GameContextType | null>(null);
@@ -20,8 +22,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [gameStatus, setGameStatus] = useState<GameStatus>("not-started");
   const [username, setUsername] = useState("Arthur");
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
-  const [clickPositions, setClickPositions] = useState<ClickPositionType[]>([]);
   const [time, setTime] = useState(0);
+  const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <GameContext.Provider
@@ -32,10 +35,12 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         setUsername,
         clickPosition,
         setClickPosition,
-        clickPositions,
-        setClickPositions,
         time,
         setTime,
+        imageSize,
+        setImageSize,
+        dropdownOpen,
+        setDropdownOpen
       }}
     >
       {children}

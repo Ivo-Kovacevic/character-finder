@@ -13,64 +13,31 @@ import DropdownMenu from "./components/DropdownMenu";
 import End from "./components/End";
 
 export default function App() {
-  const {
-    charactersToFind,
-    setCharactersToFind,
-    foundCharacters,
-    setFoundCharacters,
-    pickedCharacter,
-    setPickedCharacter,
-  } = useCharacterContext();
-
-  const {
-    gameStatus,
-    setGameStatus,
-    clickPosition,
-    setClickPosition,
-    clickPositions,
-    setClickPositions,
-  } = useGameContext();
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
+  const { setCharactersToFind } = useCharacterContext();
+  const { gameStatus, setClickPosition, setImageSize, dropdownOpen, setDropdownOpen } = useGameContext();
 
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
+    const initGame = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/init", {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+        const charactersToFind: string[] = await response.json();
+        setCharactersToFind(charactersToFind);
+      } catch (error) {
+        console.error("Error connecting to server");
+      }
+    };
+    initGame();
+
     window.addEventListener("resize", () => updateImageSize(imageRef, setImageSize));
     return window.removeEventListener("resize", () => updateImageSize(imageRef, setImageSize));
   }, []);
-
-  useEffect(() => {
-    if (pickedCharacter) {
-      if (
-        checkCharacterPosition(
-          {
-            x: (clickPosition.x / imageSize.width) * 100,
-            y: (clickPosition.y / imageSize.height) * 100,
-          },
-          pickedCharacter
-        )
-      ) {
-        setFoundCharacters((prevFoundCharacters) => [pickedCharacter, ...prevFoundCharacters]);
-        setClickPositions((prevClickPositions) => [
-          {
-            x: (clickPosition.x / imageSize.width) * 100,
-            y: (clickPosition.y / imageSize.height) * 100,
-          },
-          ...prevClickPositions,
-        ]);
-      }
-      setPickedCharacter(null);
-      setDropdownOpen(false);
-    }
-  }, [pickedCharacter]);
-
-  useEffect(() => {
-    if (charactersToFind.length === foundCharacters.length) {
-      setGameStatus("finished");
-    }
-  }, [foundCharacters]);
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -81,34 +48,32 @@ export default function App() {
   };
 
   return (
-    <>
-      <div className="video-game-legends relative w-max font-jersey">
-        <img
-          ref={imageRef}
-          onLoad={() => updateImageSize(imageRef, setImageSize)}
-          className={`video-game-legends ${gameStatus !== "running" && "blur-sm"}`}
-          onClick={(e) => handleImageClick(e)}
-          src={videoGameImage}
-          alt="video-game-legends"
-        />
+    <div className="video-game-legends relative w-max font-jersey">
+      <img
+        ref={imageRef}
+        onLoad={() => updateImageSize(imageRef, setImageSize)}
+        className={`video-game-legends ${gameStatus !== "running" && "blur-sm"}`}
+        onClick={(e) => handleImageClick(e)}
+        src={videoGameImage}
+        alt="video-game-legends"
+      />
 
-        {gameStatus === "not-started" ? (
-          <>
-            <GameSetup />
-          </>
-        ) : gameStatus === "running" ? (
-          <>
-            <GameProgress />
-            <DropdownMenu dropdownOpen={dropdownOpen} clickPosition={clickPosition} />
-          </>
-        ) : (
-          <>
-            <End />
-          </>
-        )}
+      {gameStatus === "not-started" ? (
+        <>
+          <GameSetup />
+        </>
+      ) : gameStatus === "running" ? (
+        <>
+          <GameProgress />
+          <DropdownMenu />
+        </>
+      ) : (
+        <>
+          <End />
+        </>
+      )}
 
-        {/* <CharacterHitboxes imageSize={imageSize} /> */}
-      </div>
-    </>
+      {/* <CharacterHitboxes imageSize={imageSize} /> */}
+    </div>
   );
 }
