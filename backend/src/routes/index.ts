@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { initGame, startGame, getLeaderboard, endGame } from "../controllers/gameController.js";
+import { initGame, startGame, leaderboard, endGame, checkCharacterPosition } from "../controllers/gameController.js";
 import { clearSessionMiddleware } from "../middlewares/clearSessionMiddleware.js";
 
 const router = Router();
 
 router.post("/init", initGame);
 router.post("/start", startGame);
-router.get("/leaderboard", clearSessionMiddleware, getLeaderboard);
+router.post("/check", checkCharacterPosition);
+router.get("/leaderboard", clearSessionMiddleware, leaderboard);
 router.post("/end", endGame);
 
 export default router;

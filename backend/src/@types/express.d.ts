@@ -7,8 +7,6 @@ export type CheckBody = {
 
 export type EndBody = {
   username: string;
-  time: number;
-  clickPositions: ClickPositionType[];
 };
 
 export type ClickPositionType = {
