@@ -17,11 +17,13 @@ export default function End() {
         mode: "cors",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ time, username }),
+        body: JSON.stringify({ username }),
       });
       if (!response.ok) {
         return;
       }
+      const data = response.json();
+      
       getLeaderboard();
     } catch (error) {
       console.error("Error saving result");
@@ -45,8 +47,6 @@ export default function End() {
       console.error("Error retrieving leaderboard");
     }
   };
-
-  const elapsedTime = minuteSecondMillisecond;
 
   // const replayGame = () => {
   //   setGameStatus("not-started");
@@ -74,8 +74,8 @@ export default function End() {
           </div>
         ) : (
           <div className="text-white border-2 border-lime-600 rounded p-4">
-            <h1>Do you want to save result?</h1>
-            <h2 className="text-center text-2xl">{minuteSecondMillisecond(time)}</h2>
+            <h1 className="text-center">Do you want to save the result?</h1>
+            <h2 className="text-center text-4xl">{time}</h2>
             <form
               action=""
               onSubmit={(e) => {

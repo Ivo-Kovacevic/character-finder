@@ -17,6 +17,7 @@ export default function App() {
   const { gameStatus, setClickPosition, setImageSize, dropdownOpen, setDropdownOpen } = useGameContext();
 
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     const initGame = async () => {
@@ -33,7 +34,10 @@ export default function App() {
         console.error("Error connecting to server");
       }
     };
-    initGame();
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+      initGame();
+    }
 
     window.addEventListener("resize", () => updateImageSize(imageRef, setImageSize));
     return window.removeEventListener("resize", () => updateImageSize(imageRef, setImageSize));

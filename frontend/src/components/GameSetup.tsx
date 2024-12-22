@@ -7,17 +7,16 @@ export default function GameSetup() {
 
   const startGame = async () => {
     try {
-      setGameStatus("running");
       const response = await fetch("http://localhost:3000/start", {
         method: "POST",
         mode: "cors",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(charactersToFind),
       });
       if (!response.ok) {
         return;
       }
+      setGameStatus("running");
     } catch (error) {
       console.error("Error starting game.");
     }
