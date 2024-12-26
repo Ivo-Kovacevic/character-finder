@@ -10,10 +10,11 @@ export default function End() {
 
   const saveResult = async () => {
     try {
-      const response = await apiCall("end", "post", { username });
+      const response = await apiCall("end", "POST", { username });
       if (!response.ok) {
         return;
       }
+
       getLeaderboard();
     } catch (error) {
       console.error("Error saving result");

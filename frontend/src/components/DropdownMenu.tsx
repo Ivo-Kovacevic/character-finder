@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { CharacterType, ClickPositionType } from "../@types/types";
 import { useCharacterContext } from "../context/characterContext";
 import { useGameContext } from "../context/gameContext";
 import apiCall from "../api/api";
+import { pixelsToPercentage } from "../utils/clickUtils";
 
 export default function DropdownMenu() {
   const { charactersToFind, setCharactersToFind } = useCharacterContext();
-  const { imageSize, clickPosition, dropdownOpen, setDropdownOpen, setGameStatus, setTime } = useGameContext();
+  const { imageSize, clickPosition, dropdownOpen, setDropdownOpen, setGameStatus, } = useGameContext();
 
   const checkCharacter = async (character: string) => {
     try {
@@ -14,8 +14,8 @@ export default function DropdownMenu() {
       const response = await apiCall("check", "POST", {
         characterName: character,
         clickPosition: {
-          x: (clickPosition.x / imageSize.width) * 100,
-          y: (clickPosition.y / imageSize.height) * 100,
+          x: pixelsToPercentage(clickPosition.x, imageSize.width),
+          y: pixelsToPercentage(clickPosition.y, imageSize.height),
         },
       });
       if (!response.ok) {

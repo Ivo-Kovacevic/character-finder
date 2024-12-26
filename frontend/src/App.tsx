@@ -1,16 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import videoGameImage from "./images/video-game-legends.jpg";
-import { CharacterType, ClickPositionType, GameStatus } from "./@types/types";
 import { updateImageSize } from "./utils/imageUtils";
-import { checkCharacterPosition, getRandomThreeCharacters } from "./utils/characterUtils";
-import CharacterHitboxes from "./components/CharacterHitboxes";
-import characters from "./constants/positions";
 import { useCharacterContext } from "./context/characterContext";
 import { useGameContext } from "./context/gameContext";
 import GameSetup from "./components/GameSetup";
 import GameProgress from "./components/GameProgress";
 import DropdownMenu from "./components/DropdownMenu";
 import End from "./components/End";
+import apiCall from "./api/api";
 
 export default function App() {
   const { setCharactersToFind } = useCharacterContext();
@@ -22,12 +19,11 @@ export default function App() {
   useEffect(() => {
     const initGame = async () => {
       try {
-        const response = await fetch("http://localhost:3000/init", {
-          method: "POST",
-          mode: "cors",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await apiCall("init", "POST", {});
+        if (!response.ok) {
+          return;
+        }
+
         const charactersToFind: string[] = await response.json();
         setCharactersToFind(charactersToFind);
       } catch (error) {

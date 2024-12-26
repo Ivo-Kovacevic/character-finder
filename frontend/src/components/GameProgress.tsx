@@ -4,7 +4,7 @@ import { useGameContext } from "../context/gameContext";
 import { milliseconds, minutes, seconds } from "../utils/numberUtils";
 
 export default function GameProgress() {
-  const { charactersToFind, foundCharacters } = useCharacterContext();
+  const { charactersToFind } = useCharacterContext();
   const { time, setTime } = useGameContext();
   const [running, setRunning] = useState(true);
 
@@ -21,7 +21,7 @@ export default function GameProgress() {
     if (charactersToFind.length === 0) {
       setRunning(false);
     }
-  }, [foundCharacters]);
+  }, [charactersToFind]);
 
   return (
     <>
@@ -33,19 +33,12 @@ export default function GameProgress() {
             key={`${character}-${index}-result`}
           >
             <img
-              className={`shadow shadow-black border-4 rounded-2xl ${
-                foundCharacters.some((foundCharacter) => foundCharacter.name === character)
-                  ? "border-lime-600"
-                  : "border-gray-500"
-              }`}
+              className="shadow shadow-black border-4 rounded-2xl border-gray-500"
               height="64px"
               width="64px"
               src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.split(" ").join("_")}`}
               alt={character}
             />
-            {foundCharacters.some((foundCharacter) => foundCharacter.name === character) && (
-              <div className="absolute top-0 left-0 h-full w-full rounded-xl bg-lime-600/50" />
-            )}
           </div>
         ))}
       </div>
