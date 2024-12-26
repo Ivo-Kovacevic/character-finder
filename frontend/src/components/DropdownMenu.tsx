@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CharacterType, ClickPositionType } from "../@types/types";
 import { useCharacterContext } from "../context/characterContext";
 import { useGameContext } from "../context/gameContext";
+import apiCall from "../api/api";
 
 export default function DropdownMenu() {
   const { charactersToFind, setCharactersToFind } = useCharacterContext();
@@ -10,21 +11,18 @@ export default function DropdownMenu() {
   const checkCharacter = async (character: string) => {
     try {
       setDropdownOpen(!dropdownOpen);
-      const response = await fetch("http://localhost:3000/check", {
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          characterName: character,
-          clickPosition: {
-            x: (clickPosition.x / imageSize.width) * 100,
-            y: (clickPosition.y / imageSize.height) * 100,
-          },
-        }),
+      const response = await apiCall("check", "POST", {
+        characterName: character,
+        clickPosition: {
+          x: (clickPosition.x / imageSize.width) * 100,
+          y: (clickPosition.y / imageSize.height) * 100,
+        },
       });
-      const { charactersToFind, elapsedTime }: { charactersToFind: string[]; elapsedTime: number | null } =
-        await response.json();
+      if (!response.ok) {
+        return;
+      }
+
+      const { charactersToFind }: { charactersToFind: string[] } = await response.json();
       setCharactersToFind(charactersToFind);
     } catch (error) {
       console.error("Error checking character position");

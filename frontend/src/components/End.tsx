@@ -1,29 +1,19 @@
 import { useState } from "react";
 import { LeaderboardType } from "../@types/types";
 import { useGameContext } from "../context/gameContext";
-import { useCharacterContext } from "../context/characterContext";
-import { getRandomThreeCharacters } from "../utils/characterUtils";
-import { minuteSecondMillisecond } from "../utils/numberUtils";
+import { milliseconds, minutes, seconds } from "../utils/numberUtils";
+import apiCall from "../api/api";
 
 export default function End() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
-  const { setCharactersToFind } = useCharacterContext();
   const { time, username, setUsername, setGameStatus, setTime } = useGameContext();
 
   const saveResult = async () => {
     try {
-      const response = await fetch("http://localhost:3000/end", {
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username }),
-      });
+      const response = await apiCall("end", "post", { username });
       if (!response.ok) {
         return;
       }
-      const data = response.json();
-      
       getLeaderboard();
     } catch (error) {
       console.error("Error saving result");
@@ -32,15 +22,11 @@ export default function End() {
 
   const getLeaderboard = async () => {
     try {
-      const response = await fetch("http://localhost:3000/leaderboard", {
-        method: "get",
-        mode: "cors",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await apiCall("leaderboard", "GET", {});
       if (!response.ok) {
         return;
       }
+
       const data: LeaderboardType[] = await response.json();
       setLeaderboard(data);
     } catch (error) {
@@ -65,7 +51,7 @@ export default function End() {
               <div className="flex justify-between" key={`${record.username}-${index}-leaderboard`}>
                 <span>{index + 1}</span>
                 <span className="px-4">{record.username}</span>
-                <span>{record.time}</span>
+                <span>{`${minutes(record.time)}:${seconds(record.time)}:${milliseconds(record.time)}`}</span>
               </div>
             ))}
             {/* <button onClick={replayGame} className="w-full bg-lime-600 rounded mt-4 hover:bg-lime-800">

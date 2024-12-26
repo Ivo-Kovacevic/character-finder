@@ -1,3 +1,4 @@
+import apiCall from "../api/api";
 import { useCharacterContext } from "../context/characterContext";
 import { useGameContext } from "../context/gameContext";
 
@@ -7,15 +8,11 @@ export default function GameSetup() {
 
   const startGame = async () => {
     try {
-      const response = await fetch("http://localhost:3000/start", {
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await apiCall("start", "POST", {});
       if (!response.ok) {
         return;
       }
+
       setGameStatus("running");
     } catch (error) {
       console.error("Error starting game.");
