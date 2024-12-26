@@ -6,7 +6,7 @@ import apiCall from "../api/api";
 
 export default function End() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
-  const { time, username, setUsername, setGameStatus, setTime } = useGameContext();
+  const { time, username, setUsername } = useGameContext();
 
   const saveResult = async () => {
     try {

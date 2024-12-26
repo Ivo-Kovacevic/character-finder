@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCharacterContext } from "../context/characterContext";
 import { useGameContext } from "../context/gameContext";
 import apiCall from "../api/api";
