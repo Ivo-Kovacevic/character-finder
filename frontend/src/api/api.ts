@@ -1,5 +1,7 @@
-export default async function apiCall(endpoint: string, method = "GET", body: {}) {
-  const api = "http://localhost:3000";
+import { Endpoints, Methods } from "../@types/types";
+
+export default async function apiCall(endpoint: Endpoints, method: Methods, body: {}) {
+  const api = import.meta.env.VITE_API_URL;
   const options: RequestInit = {
     method: method,
     mode: "cors",

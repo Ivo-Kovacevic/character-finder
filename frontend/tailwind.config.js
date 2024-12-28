@@ -6,6 +6,15 @@ export default {
       fontFamily: {
         jersey: ['"Jersey 25"', "sans-serif"],
       },
+      keyframes: {
+        fill: {
+          from: { width: "0%" },
+          to: { width: "100%" },
+        },
+      },
+      animation: {
+        fill: "fill 4s linear forwards",
+      },
     },
   },
   plugins: [],

@@ -5,8 +5,8 @@ import apiCall from "../api/api";
 import { pixelsToPercentage } from "../utils/clickUtils";
 
 export default function DropdownMenu() {
-  const { charactersToFind, setCharactersToFind } = useCharacterContext();
-  const { imageSize, clickPosition, dropdownOpen, setDropdownOpen, setGameStatus, } = useGameContext();
+  const { charactersToFind, setCharactersToFind, setPickedCharacter, setPickedCorrect } = useCharacterContext();
+  const { imageSize, clickPosition, dropdownOpen, setDropdownOpen, setGameStatus } = useGameContext();
 
   const checkCharacter = async (character: string) => {
     try {
@@ -18,11 +18,14 @@ export default function DropdownMenu() {
           y: pixelsToPercentage(clickPosition.y, imageSize.height),
         },
       });
+      setPickedCharacter(character);
       if (!response.ok) {
+        setPickedCorrect(false);
         return;
       }
 
       const { charactersToFind }: { charactersToFind: string[] } = await response.json();
+      setPickedCorrect(true);
       setCharactersToFind(charactersToFind);
     } catch (error) {
       console.error("Error checking character position");

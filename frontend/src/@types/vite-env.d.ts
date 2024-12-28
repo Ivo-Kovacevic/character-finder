@@ -1,7 +1,5 @@
-import { CharacterPositionType } from "./types";
-
 interface ImportMetaEnv {
-  readonly VITE_CHARACTER_POSITIONS: Record<string, CharacterPositionType>;
+  readonly VITE_API_URL: string;
 }
 
 interface ImportMeta {
