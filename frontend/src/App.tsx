@@ -3,7 +3,6 @@ import videoGameImage from "./images/video-game-legends.jpg";
 import { updateImageSize } from "./utils/imageUtils";
 import { useCharacterContext } from "./context/characterContext";
 import { useGameContext } from "./context/gameContext";
-import apiCall from "./api/api";
 import StartGame from "./components/StartGame/StartGame";
 import Gameplay from "./components/Gameplay/Gameplay";
 import GameOver from "./components/GameOver/GameOver";

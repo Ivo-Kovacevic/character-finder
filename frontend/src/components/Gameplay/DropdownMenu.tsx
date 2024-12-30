@@ -35,7 +35,7 @@ export default function DropdownMenu() {
 
   useEffect(() => {
     if (charactersToFind.length === 0) {
-      setGameStatus("finished");
+      setGameStatus("over");
     }
   }, [charactersToFind]);
 
