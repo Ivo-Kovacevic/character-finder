@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc &&prisma generate --schema=prisma/schema.prisma",
+    "build": "tsc && prisma generate --schema=prisma/schema.prisma",
+    "start": "node dist/app.js",
     "dev": "tsc -w & node --watch dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node ./prisma/seed.js"
