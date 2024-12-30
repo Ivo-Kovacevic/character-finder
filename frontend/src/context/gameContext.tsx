@@ -21,7 +21,7 @@ type GameContextType = {
 export const GameContext = createContext<GameContextType | null>(null);
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [gameStatus, setGameStatus] = useState<GameStatus>("not-started");
+  const [gameStatus, setGameStatus] = useState<GameStatus>("init");
   const [username, setUsername] = useState("Arthur");
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [time, setTime] = useState(0);

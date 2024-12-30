@@ -14,7 +14,7 @@ export type LeaderboardType = {
   time: number;
 };
 
-export type GameStatus = "not-started" | "running" | "finished";
+export type GameStatus = "init" | "play" | "over";
 
 export type Methods = "GET" | "POST";
 

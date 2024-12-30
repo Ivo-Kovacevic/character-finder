@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import apiCall from "../../api/api";
 import { useCharacterContext } from "../../context/characterContext";
 import { useGameContext } from "../../context/gameContext";
+import CharacterImage from "../CharacterImage";
 
 export default function StartGame() {
   const { charactersToFind, setCharactersToFind } = useCharacterContext();
@@ -36,41 +37,33 @@ export default function StartGame() {
         return;
       }
 
-      setGameStatus("running");
+      setGameStatus("play");
     } catch (error) {
       console.error("Error starting game.");
     }
   };
 
   return (
-    <>
-      <div className="fixed inset-0 flex justify-center items-center z-50 bg-black/75">
-        <div className="text-white border-2 border-lime-600 rounded p-4">
-          <h1 className="w-min mb-2 text-center text-4xl font-cyberpunk tracking-tighter leading-6 text-yellow-400 drop-shadow-[0_1.2px_1.2px_rgba(20,200,220,0.8)]">
-            character finder
-          </h1>
+    <div className="fixed inset-0 flex justify-center items-center z-50 bg-black/75">
+      <div className="text-white border-2 border-lime-600 rounded p-4">
+        <h1 className="w-min mb-2 text-center text-4xl font-cyberpunk tracking-tighter leading-6 text-yellow-400 drop-shadow-[0_1.2px_1.2px_rgba(20,200,220,0.8)]">
+          character finder
+        </h1>
 
-          <h2>Find these characters:</h2>
-          {charactersToFind.map((character, index) => (
-            <div className="my-4 flex items-center" key={`${character}-${index}-setup`}>
-              <img
-                className="shadow shadow-black border-4 rounded-2xl hover:scale-150 transition"
-                height="64px"
-                width="64px"
-                src={`https://res.cloudinary.com/dqbe0apqn/image/upload/${character.split(" ").join("_")}`}
-                alt={character}
-              />
-              <p className="p-2">{character}</p>
-            </div>
-          ))}
-          <button
-            className="text-center w-full bg-lime-700 rounded py-2 hover:bg-lime-900 focus:outline-white"
-            onClick={startGame}
-          >
-            Start
-          </button>
-        </div>
+        <h2>Find these characters:</h2>
+        {charactersToFind.map((characterName, index) => (
+          <div className="my-4 flex items-center" key={`${characterName}-${index}-setup`}>
+            <CharacterImage characterName={characterName} />
+            <p className="p-2">{characterName}</p>
+          </div>
+        ))}
+        <button
+          className="text-center w-full bg-lime-700 rounded py-2 hover:bg-lime-900 focus:outline-white"
+          onClick={startGame}
+        >
+          Start
+        </button>
       </div>
-    </>
+    </div>
   );
 }

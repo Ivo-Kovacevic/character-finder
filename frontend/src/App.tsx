@@ -31,15 +31,15 @@ export default function App() {
       <img
         ref={imageRef}
         onLoad={() => updateImageSize(imageRef, setImageSize)}
-        className={`video-game-legends ${gameStatus !== "running" && "blur-sm"}`}
+        className={`video-game-legends ${gameStatus !== "play" && "blur-sm"}`}
         onClick={(e) => handleImageClick(e)}
         src={videoGameImage}
         alt="video-game-legends"
       />
 
-      {gameStatus === "not-started" ? (
+      {gameStatus === "init" ? (
         <StartGame />
-      ) : gameStatus === "running" ? (
+      ) : gameStatus === "play" ? (
         <Gameplay />
       ) : (
         <GameOver />

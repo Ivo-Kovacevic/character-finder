@@ -1,6 +1,7 @@
 import { LeaderboardType } from "../../@types/types";
 import apiCall from "../../api/api";
 import { useGameContext } from "../../context/gameContext";
+import { milliseconds, minutes, seconds } from "../../utils/numberUtils";
 
 export default function SaveResult() {
   const { username, setUsername, setLeaderboard, time } = useGameContext();
@@ -35,7 +36,7 @@ export default function SaveResult() {
   return (
     <>
       <h1 className="text-center">Do you want to save the result?</h1>
-      <h2 className="text-center text-4xl">{time}</h2>
+      <h2 className="text-center text-4xl">{minutes(time)}:{seconds(time)}:{milliseconds(time)}</h2>
       <form
         action=""
         onSubmit={(e) => {
@@ -51,6 +52,7 @@ export default function SaveResult() {
           placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
           required
+          maxLength={20}
         />
         <button className="w-full bg-lime-600 rounded mt-2 hover:bg-lime-800">Save</button>
       </form>

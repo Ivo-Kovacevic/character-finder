@@ -14,9 +14,6 @@ export default function Leaderboard() {
           <span>{`${minutes(record.time)}:${seconds(record.time)}:${milliseconds(record.time)}`}</span>
         </div>
       ))}
-      {/* <button onClick={replayGame} className="w-full bg-lime-600 rounded mt-4 hover:bg-lime-800">
-          Play again
-      </button> */}
     </>
   );
 }
