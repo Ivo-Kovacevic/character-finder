@@ -2,6 +2,8 @@ import { Endpoints, Methods } from "../@types/types";
 
 export default async function apiCall(endpoint: Endpoints, method: Methods, body: {}) {
   const api = import.meta.env.VITE_API_URL;
+  console.log(`API: ${api}`);
+
   const options: RequestInit = {
     method: method,
     mode: "cors",
