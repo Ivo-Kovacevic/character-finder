@@ -40,6 +40,7 @@ app.use(
     }),
     cookie: {
       maxAge: 60 * 60 * 1000,
+      secure: true,
     },
   })
 );
