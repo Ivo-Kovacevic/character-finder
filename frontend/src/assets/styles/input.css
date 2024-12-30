@@ -20,3 +20,15 @@
     @apply h-screen max-w-none overflow-y-hidden;
   }
 }
+@layer base {
+  @font-face {
+    font-family: "Cyberpunk";
+    src: url("../fonts/Cyberpunk.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+}
+
+.text-shadow-cyan {
+  text-shadow: 0 1.2px 1.2px rgba(103, 232, 249, 1); /* Cyan shadow */
+}

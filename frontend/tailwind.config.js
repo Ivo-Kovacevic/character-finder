@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         jersey: ['"Jersey 25"', "sans-serif"],
+        cyberpunk: ["Cyberpunk", "sans-serif"]
       },
       keyframes: {
         fill: {
