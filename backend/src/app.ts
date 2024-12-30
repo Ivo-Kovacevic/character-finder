@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express, { Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
@@ -20,7 +21,7 @@ const prisma = new PrismaClient();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CORS_ORIGIN,
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
