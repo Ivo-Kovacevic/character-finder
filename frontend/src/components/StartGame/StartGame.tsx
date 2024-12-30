@@ -46,7 +46,7 @@ export default function StartGame() {
     <>
       <div className="fixed inset-0 flex justify-center items-center z-50 bg-black/75">
         <div className="text-white border-2 border-lime-600 rounded p-4">
-          <h1 className="w-min text-center text-4xl font-cyberpunk text-yellow-400 drop-shadow-[0_1.2px_1.2px_rgba(20,200,220,0.8)]">
+          <h1 className="w-min mb-2 text-center text-4xl font-cyberpunk tracking-tighter leading-6 text-yellow-400 drop-shadow-[0_1.2px_1.2px_rgba(20,200,220,0.8)]">
             character finder
           </h1>
 

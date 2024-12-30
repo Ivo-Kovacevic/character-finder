@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useCharacterContext } from "../../context/characterContext";
 import { useGameContext } from "../../context/gameContext";
 import apiCall from "../../api/api";
@@ -7,6 +7,7 @@ import { pixelsToPercentage } from "../../utils/clickUtils";
 export default function DropdownMenu() {
   const { charactersToFind, setCharactersToFind, setPickedCharacter, setPickedCorrect } = useCharacterContext();
   const { imageSize, clickPosition, dropdownOpen, setDropdownOpen, setGameStatus } = useGameContext();
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const checkCharacter = async (character: string) => {
     try {
@@ -38,11 +39,24 @@ export default function DropdownMenu() {
     }
   }, [charactersToFind]);
 
+  // Move dropdown inwards if click is near right or bottom border
+  useEffect(() => {
+    if (dropdownOpen && dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const adjustedX = Math.min(clickPosition.x, imageSize.width - dropdownRect.width);
+      const adjustedY = Math.min(clickPosition.y, imageSize.height - dropdownRect.height);
+
+      dropdownRef.current.style.left = `${adjustedX}px`;
+      dropdownRef.current.style.top = `${adjustedY}px`;
+    }
+  }, [dropdownOpen, imageSize]);
+
   return (
     <>
       {dropdownOpen && (
         <div
-          className="absolute top-0 text-xl text-white shadow-xl shadow-black"
+          ref={dropdownRef}
+          className="absolute top-0 text-xl w-max text-white shadow-xl shadow-black"
           style={{ top: `${clickPosition.y}px`, left: `${clickPosition.x}px` }}
         >
           {charactersToFind.map((character, index) => (
