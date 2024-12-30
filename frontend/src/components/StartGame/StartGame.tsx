@@ -1,10 +1,33 @@
+import { useEffect, useRef } from "react";
 import apiCall from "../../api/api";
 import { useCharacterContext } from "../../context/characterContext";
 import { useGameContext } from "../../context/gameContext";
 
 export default function StartGame() {
-  const { charactersToFind } = useCharacterContext();
-  const { setGameStatus } = useGameContext();
+  const { charactersToFind, setCharactersToFind } = useCharacterContext();
+  const { setGameStatus, setTime } = useGameContext();
+  const isInitialized = useRef(false);
+
+  useEffect(() => {
+    setTime(0);
+    const initGame = async () => {
+      try {
+        const response = await apiCall("init", "POST", {});
+        if (!response.ok) {
+          return;
+        }
+
+        const charactersToFind: string[] = await response.json();
+        setCharactersToFind(charactersToFind);
+      } catch (error) {
+        console.error("Error connecting to server");
+      }
+    };
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+      initGame();
+    }
+  }, []);
 
   const startGame = async () => {
     try {

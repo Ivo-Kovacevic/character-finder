@@ -12,27 +12,8 @@ export default function App() {
   const { setCharactersToFind } = useCharacterContext();
   const { gameStatus, setClickPosition, setImageSize, dropdownOpen, setDropdownOpen } = useGameContext();
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const isInitialized = useRef(false);
 
   useEffect(() => {
-    const initGame = async () => {
-      try {
-        const response = await apiCall("init", "POST", {});
-        if (!response.ok) {
-          return;
-        }
-
-        const charactersToFind: string[] = await response.json();
-        setCharactersToFind(charactersToFind);
-      } catch (error) {
-        console.error("Error connecting to server");
-      }
-    };
-    if (!isInitialized.current) {
-      isInitialized.current = true;
-      initGame();
-    }
-
     window.addEventListener("resize", () => updateImageSize(imageRef, setImageSize));
     return window.removeEventListener("resize", () => updateImageSize(imageRef, setImageSize));
   }, []);
