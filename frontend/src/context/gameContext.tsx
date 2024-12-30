@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { ClickPositionType, GameStatus } from "../@types/types";
+import { ClickPositionType, GameStatus, LeaderboardType } from "../@types/types";
 
 type GameContextType = {
   gameStatus: GameStatus;
@@ -14,6 +14,8 @@ type GameContextType = {
   setImageSize: React.Dispatch<React.SetStateAction<{ height: number; width: number }>>;
   dropdownOpen: boolean;
   setDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>
+  leaderboard: LeaderboardType[];
+  setLeaderboard: React.Dispatch<React.SetStateAction<LeaderboardType[]>>
 };
 
 export const GameContext = createContext<GameContextType | null>(null);
@@ -25,6 +27,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [time, setTime] = useState(0);
   const [imageSize, setImageSize] = useState({ height: 1238, width: 2500 });
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
 
   return (
     <GameContext.Provider
@@ -40,7 +43,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         imageSize,
         setImageSize,
         dropdownOpen,
-        setDropdownOpen
+        setDropdownOpen,
+        leaderboard,
+        setLeaderboard
       }}
     >
       {children}

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useCharacterContext } from "../context/characterContext";
-import { useGameContext } from "../context/gameContext";
-import apiCall from "../api/api";
-import { pixelsToPercentage } from "../utils/clickUtils";
+import { useCharacterContext } from "../../context/characterContext";
+import { useGameContext } from "../../context/gameContext";
+import apiCall from "../../api/api";
+import { pixelsToPercentage } from "../../utils/clickUtils";
 
 export default function DropdownMenu() {
   const { charactersToFind, setCharactersToFind, setPickedCharacter, setPickedCorrect } = useCharacterContext();

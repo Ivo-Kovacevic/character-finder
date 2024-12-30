@@ -1,8 +1,8 @@
-import apiCall from "../api/api";
-import { useCharacterContext } from "../context/characterContext";
-import { useGameContext } from "../context/gameContext";
+import apiCall from "../../api/api";
+import { useCharacterContext } from "../../context/characterContext";
+import { useGameContext } from "../../context/gameContext";
 
-export default function GameSetup() {
+export default function StartGame() {
   const { charactersToFind } = useCharacterContext();
   const { setGameStatus } = useGameContext();
 

@@ -3,16 +3,14 @@ import videoGameImage from "./images/video-game-legends.jpg";
 import { updateImageSize } from "./utils/imageUtils";
 import { useCharacterContext } from "./context/characterContext";
 import { useGameContext } from "./context/gameContext";
-import GameSetup from "./components/GameSetup";
-import GameProgress from "./components/GameProgress";
-import DropdownMenu from "./components/DropdownMenu";
-import End from "./components/End";
 import apiCall from "./api/api";
+import StartGame from "./components/StartGame/StartGame";
+import Gameplay from "./components/Gameplay/Gameplay";
+import GameOver from "./components/GameOver/GameOver";
 
 export default function App() {
   const { setCharactersToFind } = useCharacterContext();
   const { gameStatus, setClickPosition, setImageSize, dropdownOpen, setDropdownOpen } = useGameContext();
-
   const imageRef = useRef<HTMLImageElement | null>(null);
   const isInitialized = useRef(false);
 
@@ -59,21 +57,12 @@ export default function App() {
       />
 
       {gameStatus === "not-started" ? (
-        <>
-          <GameSetup />
-        </>
+        <StartGame />
       ) : gameStatus === "running" ? (
-        <>
-          <GameProgress />
-          <DropdownMenu />
-        </>
+        <Gameplay />
       ) : (
-        <>
-          <End />
-        </>
+        <GameOver />
       )}
-
-      {/* <CharacterHitboxes imageSize={imageSize} /> */}
     </div>
   );
 }
