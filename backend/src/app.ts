@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
@@ -17,7 +17,6 @@ declare module "express-session" {
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000");
-const prisma = new PrismaClient();
 
 app.use(
   cors({
@@ -28,6 +27,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: "a santa at nasa",
@@ -40,7 +40,9 @@ app.use(
     }),
     cookie: {
       maxAge: 60 * 60 * 1000,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      httpOnly: true,
     },
   })
 );
