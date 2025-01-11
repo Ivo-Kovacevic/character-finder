@@ -8,7 +8,6 @@ import Gameplay from "./components/Gameplay/Gameplay";
 import GameOver from "./components/GameOver/GameOver";
 
 export default function App() {
-  const { setCharactersToFind } = useCharacterContext();
   const { gameStatus, setClickPosition, setImageSize, dropdownOpen, setDropdownOpen } = useGameContext();
   const imageRef = useRef<HTMLImageElement | null>(null);
 

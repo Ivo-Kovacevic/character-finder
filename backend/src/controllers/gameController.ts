@@ -13,7 +13,7 @@ export const initGame = async (req: Request<{}, {}, {}, {}>, res: Response) => {
 };
 
 export const startGame = async (req: Request<{}, {}, {}, {}>, res: Response) => {
-  if (!req.session) {
+  if (!req.session.charactersToFind) {
     res.status(400).json({ message: "No valid session was found" });
     return;
   }

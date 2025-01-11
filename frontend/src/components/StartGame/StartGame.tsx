@@ -37,9 +37,7 @@ export default function StartGame() {
   const startGame = async () => {
     try {
       const response = await apiCall("start", "POST", {});
-      if (!response.ok) {
-        return;
-      }
+      if (!response.ok) return;
 
       setGameStatus("play");
     } catch (error) {
