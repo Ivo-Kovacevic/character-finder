@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StartBody, EndBody, ClickPositionType, CheckBody, CharacterType } from "../@types/express.js";
+import { EndBody, CheckBody } from "../@types/express.js";
 import { clearSessionMiddleware } from "../middlewares/clearSessionMiddleware.js";
 import { checkPositionForCharacter, getRandomCharacters } from "../services/characterServices.js";
 import { addRecordToLeaderboard, getLeaderboard } from "../services/gameServices.js";
@@ -13,6 +13,10 @@ export const initGame = async (req: Request<{}, {}, {}, {}>, res: Response) => {
 };
 
 export const startGame = async (req: Request<{}, {}, {}, {}>, res: Response) => {
+  if (!req.session) {
+    res.status(400).json({ message: "No valid session was found" });
+    return;
+  }
   req.session.startTime = Date.now();
 
   res.status(200).json({ message: "Game started" });
